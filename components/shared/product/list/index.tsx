@@ -1,8 +1,8 @@
 import ProductCard from "@/components/shared/product/card"
+import type { Product } from "@/types"
 
 type ProductListProps = {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  data: any
+  data: Product[]
   title: string
   limit?: number
 }
@@ -18,8 +18,7 @@ export default function ProductList({ data, title, limit = 4 }: ProductListProps
 
       {data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-          {limitedData.map((product: any) => (
+          {limitedData.map((product: Product) => (
             <ProductCard key={product.slug} product={product} />
           ))}
         </div>

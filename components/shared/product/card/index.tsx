@@ -1,16 +1,12 @@
 import ProductPrice from "@/components/shared/product/price"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import type { Product } from "@/types"
 import Image from "next/image"
 import Link from "next/link"
 
-type ProductCardProps = {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  product: any
-}
-
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm hover:scale-95 transition-transform duration-700">
       <CardHeader className="p-0 items-center">
         <Link href={`/product/${product.slug}`}>
           <Image
