@@ -18,11 +18,17 @@ export const metadata: Metadata = {
   title: 'Sign In',
 }
 
-export default async function SignInPage() {
+interface SignInPageProps {
+  searchParams: Promise<{ callbackUrl: string }>
+}
+
+export default async function SignInPage({ searchParams }: SignInPageProps) {
+  const { callbackUrl } = await searchParams
+
   const session = await auth()
 
   if (session) {
-    return redirect('/')
+    return redirect(callbackUrl || '/')
   }
 
   return (
