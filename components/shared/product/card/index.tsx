@@ -15,6 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
             width={300}
             height={300}
             priority
+            className="rounded-lg"
           />
         </Link>
       </CardHeader>
