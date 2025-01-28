@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
             width={300}
             height={300}
             priority
-            className="rounded-lg"
+            className="rounded-t-lg"
           />
         </Link>
       </CardHeader>
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: { product: Product }) {
               className="font-semibold"
             />
           ) : (
-            <p className="text-destructive">Out of stock</p>
+            <p className="text-destructive font-semibold">Out of stock</p>
           )}
         </div>
       </CardContent>
