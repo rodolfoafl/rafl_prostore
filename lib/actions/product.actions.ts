@@ -1,8 +1,8 @@
-'use server';
+'use server'
 
-import { prisma } from '@/db/prisma';
-import { LATEST_PRODUCTS_LIMIT } from '@/lib/constants';
-import { convertToPlainObject } from '@/lib/utils';
+import { prisma } from '@/db/prisma'
+import { LATEST_PRODUCTS_LIMIT } from '@/lib/constants'
+import { convertToPlainObject } from '@/lib/utils'
 
 // Get latest products
 export async function getLatestProducts() {
@@ -11,9 +11,9 @@ export async function getLatestProducts() {
     orderBy: {
       createdAt: 'desc',
     },
-  });
+  })
 
-  return convertToPlainObject(data);
+  return convertToPlainObject(data)
 }
 
 // Get single product by slug
@@ -22,7 +22,7 @@ export async function getProductBySlug(slug: string) {
     where: {
       slug,
     },
-  });
+  })
 
-  return data;
+  return data
 }

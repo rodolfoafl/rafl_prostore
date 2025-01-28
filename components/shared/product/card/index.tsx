@@ -1,13 +1,14 @@
-import ProductPrice from "@/components/shared/product/price"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import type { Product } from "@/types"
-import Image from "next/image"
-import Link from "next/link"
+import Image from 'next/image'
+import Link from 'next/link'
+
+import ProductPrice from '@/components/shared/product/price'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import type { Product } from '@/types'
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Card className="w-full max-w-sm hover:scale-95 transition-transform duration-700">
-      <CardHeader className="p-0 items-center">
+    <Card className="w-full max-w-sm transition-transform duration-700 hover:scale-95">
+      <CardHeader className="items-center p-0">
         <Link href={`/product/${product.slug}`}>
           <Image
             src={product.images[0]}
@@ -20,7 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </Link>
       </CardHeader>
 
-      <CardContent className="p-4 grid gap-4">
+      <CardContent className="grid gap-4 p-4">
         <div className="text-sm">{product.brand}</div>
         <Link href={`/product/${product.slug}`}>
           <h2 className="text-sm font-medium">{product.name}</h2>
@@ -34,7 +35,7 @@ export default function ProductCard({ product }: { product: Product }) {
               className="font-semibold"
             />
           ) : (
-            <p className="text-destructive font-semibold">Out of stock</p>
+            <p className="font-semibold text-destructive">Out of stock</p>
           )}
         </div>
       </CardContent>

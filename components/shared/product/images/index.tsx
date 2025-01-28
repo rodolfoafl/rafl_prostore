@@ -1,15 +1,16 @@
 'use client'
 
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { useState } from "react";
+import Image from 'next/image'
+import { useState } from 'react'
+
+import { cn } from '@/lib/utils'
 
 interface ProductImagesProps {
   images: string[]
 }
 
 export default function ProductImages({ images }: ProductImagesProps) {
-  const [currentState, setCurrentState] = useState(0);
+  const [currentState, setCurrentState] = useState(0)
 
   return (
     <div className="space-y-4">
@@ -18,15 +19,21 @@ export default function ProductImages({ images }: ProductImagesProps) {
         alt="Product Image"
         width={1000}
         height={1000}
-        className="min-h-[300px] object-cover object-center rounded-lg"
+        className="min-h-[300px] rounded-lg object-cover object-center"
       />
 
       <div className="flex">
         {images.map((image, index) => (
-          <div key={image}
+          <div
+            key={image}
             onClick={() => setCurrentState(index)}
-            onKeyUp={(e) => { if (e.key === 'Enter') setCurrentState(index); }}
-            className={cn('border rounded-lg mr-2 cursor-pointer hover:border-orange-600', currentState === index && 'border-orange-500')}
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') setCurrentState(index)
+            }}
+            className={cn(
+              'mr-2 cursor-pointer rounded-lg border hover:border-orange-600',
+              currentState === index && 'border-orange-500',
+            )}
           >
             <Image
               src={image}

@@ -1,16 +1,16 @@
-import { Prisma, PrismaClient} from "@prisma/client"
-import sampleData from "@/db/sample-data"
+import { Prisma, PrismaClient } from '@prisma/client';
+import sampleData from '@/db/sample-data';
 
-async function main(){
-  const prisma = new PrismaClient()
+async function main() {
+  const prisma = new PrismaClient();
 
-  await prisma.product.deleteMany()
+  await prisma.product.deleteMany();
 
-  await prisma.product.createMany({ data: sampleData.products})
+  await prisma.product.createMany({ data: sampleData.products });
 
-  console.log('Database seeded successfully!')
+  console.log('Database seeded successfully!');
 }
 
-main()
+main();
 
 // To run: npx tsx ./db/seed

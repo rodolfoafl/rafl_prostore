@@ -1,4 +1,4 @@
-import { Loader } from 'lucide-react';
+import { Loader } from 'lucide-react'
 
 export default function LoadingPage() {
   return (
@@ -11,7 +11,7 @@ export default function LoadingPage() {
         width: '100vw',
       }}
     >
-      <Loader size={150} className='animate-spin' />
+      <Loader size={150} className="animate-spin" />
     </div>
-  );
+  )
 }
