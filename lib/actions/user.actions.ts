@@ -5,6 +5,7 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
 import { signIn, signOut } from '@/auth'
 import { prisma } from '@/db/prisma'
+import { formatError } from '@/lib/utils'
 import { signInFormSchema, signUpFormSchema } from '@/lib/validators'
 
 // Sign in the user with credentials
@@ -46,7 +47,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
     const user = signUpFormSchema.parse({
       name: formData.get('name'),
       email: formData.get('email'),
-      password: formData.get('namepassword'),
+      password: formData.get('password'),
       confirmPassword: formData.get('confirmPassword'),
     })
 
@@ -77,7 +78,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
 
     return {
       success: false,
-      message: 'User was not registered',
+      message: formatError(error),
     }
   }
 }
