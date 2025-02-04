@@ -37,3 +37,13 @@ export function formatError(error: any) {
       : JSON.stringify(error.message)
   }
 }
+
+// Round number to 2 decimal places
+export function round2(value: number | string) {
+  if (typeof value !== 'number' && typeof value !== 'string') {
+    throw new Error('Value is not a number or string')
+  }
+
+  const num = typeof value === 'string' ? Number(value) : value
+  return Math.round((num + Number.EPSILON) * 100) / 100
+}
