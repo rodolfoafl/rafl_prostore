@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import AddToCart from '@/components/shared/product/add-to-cart'
@@ -94,4 +95,29 @@ export default async function ProductDetailsPage({
       </section>
     </>
   )
+}
+
+export async function generateMetadata({
+  params,
+}: ProductDetailsPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const product = await getProductBySlug(slug)
+
+  return {
+    title: product?.name,
+    description: product?.description,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_SERVER_URL}/product/${product?.slug}`,
+    },
+    openGraph: {
+      url: `${process.env.NEXT_PUBLIC_SERVER_URL}/product/${product?.slug}`,
+      images: [
+        {
+          url: product?.images[0] || '',
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+  }
 }
