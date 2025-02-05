@@ -64,7 +64,7 @@ export default function SignInForm() {
         )}
         <div className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/sign-up" target="_self" className="text-yellow-500">
+          <Link href="/sign-up" target="_self" className="text-yellow-400">
             Sign Up
           </Link>
         </div>
