@@ -1,9 +1,9 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { compareSync } from 'bcrypt-ts-edge'
-import { NextResponse } from 'next/server'
-import NextAuth, { NextAuthConfig } from 'next-auth'
+import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+import { authConfig } from '@/auth.config'
 import { prisma } from '@/db/prisma'
 
 export const config = {
@@ -12,7 +12,7 @@ export const config = {
     error: '/sign-in',
   },
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt' as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
@@ -52,6 +52,7 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub
@@ -81,27 +82,7 @@ export const config = {
 
       return token
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    authorized({ request, auth }: any) {
-      if (!request.cookies.get('sessionCartId')) {
-        const sessionCardId = crypto.randomUUID()
-
-        const newRequestHeaders = new Headers(request.headers)
-
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        })
-
-        response.cookies.set('sessionCartId', sessionCardId)
-
-        return response
-      } else {
-        return true
-      }
-    },
   },
-} satisfies NextAuthConfig
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
