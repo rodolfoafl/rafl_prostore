@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
+import CheckoutSteps from '@/components/shared/checkout-steps'
 import ShippingAddressForm from '@/components/shipping-address-form'
 import { getUserCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
@@ -23,6 +24,7 @@ export default async function ShippingAddressPage() {
 
   return (
     <div className="min-h-screen">
+      <CheckoutSteps current={1} />
       <ShippingAddressForm address={user.address as ShippingAddress} />
     </div>
   )
