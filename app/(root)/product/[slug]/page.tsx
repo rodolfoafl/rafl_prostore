@@ -5,6 +5,7 @@ import ProductImages from '@/components/shared/product/images'
 import ProductPrice from '@/components/shared/product/price'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { getUserCart } from '@/lib/actions/cart.actions'
 import { getProductBySlug } from '@/lib/actions/product.actions'
 
 interface ProductDetailsPageProps {
@@ -20,6 +21,8 @@ export default async function ProductDetailsPage({
   if (!product) {
     notFound()
   }
+
+  const cart = await getUserCart()
 
   return (
     <>
@@ -72,6 +75,7 @@ export default async function ProductDetailsPage({
                 {product.stock > 0 ? (
                   <div className="mt-5 flex justify-center">
                     <AddToCart
+                      cart={cart}
                       item={{
                         productId: product.id,
                         name: product.name,

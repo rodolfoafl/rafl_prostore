@@ -6,10 +6,8 @@ type ProductPriceProps = {
 }
 
 export default function ProductPrice({ value, className }: ProductPriceProps) {
-  // Ensure two decimal places
   const stringValue = value.toFixed(2)
 
-  // Get the int/float
   const [intValue, floatValue] = stringValue.split('.')
 
   return (
