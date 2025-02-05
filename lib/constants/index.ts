@@ -26,3 +26,14 @@ export const SHIPPING_ADDRESS_DEFAULT_VALUES = {
   postalCode: '',
   country: '',
 }
+
+// Array of regex patterns of paths to protect
+export const PROTECTED_PATHS = [
+  /\/shipping-address/,
+  /\/payment-method/,
+  /\/place-order/,
+  /\/profile/,
+  /\/user\/(.*)/,
+  /\/order\/(.*)/,
+  /\/admin/,
+]
