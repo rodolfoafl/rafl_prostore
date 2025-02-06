@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
+import PlaceOrderForm from '@/components/place-order-form'
 import CheckoutSteps from '@/components/shared/checkout-steps'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -142,6 +143,7 @@ export default async function PlaceOrderPage() {
                   {formatCurrency(cart.totalPrice)}
                 </div>
               </div>
+              <PlaceOrderForm />
             </CardContent>
           </Card>
         </div>
