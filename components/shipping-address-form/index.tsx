@@ -46,6 +46,7 @@ export default function ShippingAddressForm({
           variant: 'destructive',
           description: response.message,
         })
+        return
       }
 
       router.push('/payment-method')
