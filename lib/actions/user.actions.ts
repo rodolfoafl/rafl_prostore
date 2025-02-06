@@ -7,11 +7,12 @@ import { auth, signIn, signOut } from '@/auth'
 import { prisma } from '@/db/prisma'
 import { formatError } from '@/lib/utils'
 import {
+  paymentMethodSchema,
   shippingAddressSchema,
   signInFormSchema,
   signUpFormSchema,
 } from '@/lib/validators'
-import { ShippingAddress } from '@/types'
+import { PaymentMethod, ShippingAddress } from '@/types'
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -113,6 +114,36 @@ export async function updateUserAddress(data: ShippingAddress) {
     await prisma.user.update({
       where: { id: user.id },
       data: { address },
+    })
+
+    return {
+      success: true,
+      message: 'User updated successfully',
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    }
+  }
+}
+
+export async function updateUserPaymentMethod(data: PaymentMethod) {
+  try {
+    const session = await auth()
+    const user = await prisma.user.findUnique({
+      where: { id: session?.user?.id },
+    })
+
+    if (!user) throw new Error('User not found')
+
+    const paymentMethod = paymentMethodSchema.parse(data)
+
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: { paymentMethod: paymentMethod.type },
     })
 
     return {
