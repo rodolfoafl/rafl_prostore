@@ -6,7 +6,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/db/prisma'
 import { getUserCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
-import { formatError } from '@/lib/utils'
+import { convertToPlainObject, formatError } from '@/lib/utils'
 import { insertOrderSchema } from '@/lib/validators'
 import { CartItem } from '@/types'
 
@@ -100,4 +100,23 @@ export async function createOrder() {
       message: formatError(error),
     }
   }
+}
+
+export async function getOrderById(orderId: string) {
+  const data = await prisma.order.findUnique({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderitems: true,
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  })
+
+  return convertToPlainObject(data)
 }
