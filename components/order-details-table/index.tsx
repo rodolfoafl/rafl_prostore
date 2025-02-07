@@ -1,12 +1,9 @@
-import { Metadata } from 'next'
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
-import { auth } from '@/auth'
-import PlaceOrderForm from '@/components/place-order-form'
-import CheckoutSteps from '@/components/shared/checkout-steps'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Table,
@@ -16,67 +13,69 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getUserCart } from '@/lib/actions/cart.actions'
-import { getUserById } from '@/lib/actions/user.actions'
-import { formatCurrency } from '@/lib/utils'
-import { ShippingAddress } from '@/types'
+import { formatCurrency, formatDateTime, shortenId } from '@/lib/utils'
+import { Order } from '@/types'
 
-export const metadata: Metadata = {
-  title: 'Place Order',
-}
-
-export default async function PlaceOrderPage() {
-  const cart = await getUserCart()
-  const session = await auth()
-  const userId = session?.user?.id
-
-  if (!userId) throw new Error('User not found')
-
-  const user = await getUserById(userId)
-
-  if (!cart || cart.items.length === 0) redirect('/cart')
-  if (!user.address) redirect('/shipping-address')
-  if (!user.paymentMethod) redirect('/payment-method')
-
-  const userAddress = user.address as ShippingAddress
+export default function OrderDetailsTable({ order }: { order: Order }) {
+  const {
+    id,
+    shippingAddress,
+    orderitems,
+    itemsPrice,
+    shippingPrice,
+    taxPrice,
+    totalPrice,
+    paymentMethod,
+    isPaid,
+    paidAt,
+    isDelivered,
+    deliveredAt,
+  } = order
 
   return (
-    <div className="min-h-screen">
-      <CheckoutSteps current={3} />
-      <h1 className="py-4 text-2xl">Place Order</h1>
+    <>
+      <h1 className="py-4 text-2xl">Order {shortenId(id)}</h1>
 
-      {/* TODO: Extract the grid to a separate component, to be reusable */}
+      {/* TODO: Use reusable grid component */}
       <div className="grid md:grid-cols-3 md:gap-5">
-        <div className="space-y-4 overflow-x-auto md:col-span-2">
+        <div className="col-span-2 space-y-4 overflow-x-auto">
           <Card>
             <CardContent className="gap-4 p-4">
-              <h2 className="pb-4 text-xl font-semibold">Shipping Address</h2>
-              <p>{userAddress.fullName}</p>
+              <h2 className="pb-4 text-xl">Payment Method</h2>
+              <p>{paymentMethod}</p>
+              <div className="mt-2">
+                {isPaid ? (
+                  <Badge variant="secondary">
+                    Paid at {formatDateTime(paidAt!).dateTime}
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">Not paid</Badge>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="gap-4 p-4">
+              <h2 className="pb-4 text-xl">Shipping Address</h2>
+              <p>{shippingAddress.fullName}</p>
               <p>
-                {userAddress.streetAddress}, {userAddress.city}{' '}
-                {userAddress.postalCode}, {userAddress.country}{' '}
+                {shippingAddress.streetAddress}, {shippingAddress.city}{' '}
+                {shippingAddress.postalCode}, {shippingAddress.country}{' '}
               </p>
-              <div className="mt-3">
-                <Link href="/shipping-address">
-                  <Button variant="outline">Edit</Button>
-                </Link>
+              <div className="mt-2">
+                {isDelivered ? (
+                  <Badge variant="secondary">
+                    Delivered at {formatDateTime(deliveredAt!).dateTime}
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">Not delivered</Badge>
+                )}
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="gap-4 p-4">
-              <h2 className="pb-4 text-xl font-semibold">Payment Method</h2>
-              <p>{user.paymentMethod}</p>
-              <div className="mt-3">
-                <Link href="/payment-method">
-                  <Button variant="outline">Edit</Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="gap-4 p-4">
-              <h2 className="pb-4 text-xl font-semibold">Order Items</h2>
+              <h2 className="pb-2 text-xl">Order Items</h2>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -86,7 +85,7 @@ export default async function PlaceOrderPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cart.items.map((item) => (
+                  {orderitems.map((item) => (
                     <TableRow key={item.slug}>
                       <TableCell>
                         <Link
@@ -123,32 +122,29 @@ export default async function PlaceOrderPage() {
               <div className="flex justify-between">
                 <div>Items</div>
                 <div className="font-semibold">
-                  {formatCurrency(cart.itemsPrice)}
+                  {formatCurrency(itemsPrice)}
                 </div>
               </div>
               <div className="flex justify-between">
                 <div>Shipping</div>
                 <div className="font-semibold">
-                  {formatCurrency(cart.shippingPrice)}
+                  {formatCurrency(shippingPrice)}
                 </div>
               </div>
               <div className="flex justify-between">
                 <div>Tax</div>
-                <div className="font-semibold">
-                  {formatCurrency(cart.taxPrice)}
-                </div>
+                <div className="font-semibold">{formatCurrency(taxPrice)}</div>
               </div>
               <div className="flex justify-between border-t border-gray-200 pt-4">
                 <div>Total</div>
                 <div className="text-xl font-semibold">
-                  {formatCurrency(cart.totalPrice)}
+                  {formatCurrency(totalPrice)}
                 </div>
               </div>
-              <PlaceOrderForm />
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
+    </>
   )
 }
