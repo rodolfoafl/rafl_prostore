@@ -101,3 +101,11 @@ export const insertOrderSchema = z.object({
 
 // Schema for inserting an order item
 export const insertOrderItemSchema = cartItemSchema
+
+// Schema for paypal payment result
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
+})
