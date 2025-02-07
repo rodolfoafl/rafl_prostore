@@ -7,6 +7,7 @@ import { auth } from '@/auth'
 import { prisma } from '@/db/prisma'
 import { getUserCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
+import { PAGINATION_PAGE_SIZE } from '@/lib/constants'
 import { paypal } from '@/lib/paypal'
 import { convertToPlainObject, formatError } from '@/lib/utils'
 import { insertOrderSchema } from '@/lib/validators'
@@ -123,7 +124,6 @@ export async function getOrderById(orderId: string) {
   return convertToPlainObject(data)
 }
 
-// Create new paypal order
 export async function createPayPalOrder(orderId: string) {
   try {
     const order = await prisma.order.findUnique({
@@ -163,7 +163,6 @@ export async function createPayPalOrder(orderId: string) {
   }
 }
 
-// Approve paypal order and update order to paid
 export async function approvePayPalOrder(
   orderId: string,
   data: { orderId: string },
@@ -272,4 +271,37 @@ async function updateOrderToPaid({
   })
 
   if (!updatedOrder) throw new Error('Order not found')
+}
+
+export async function getUserOrders({
+  limit = PAGINATION_PAGE_SIZE,
+  page,
+}: {
+  limit?: number
+  page: number
+}) {
+  const session = await auth()
+  if (!session) throw new Error('User is not authenticated')
+
+  const data = await prisma.order.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: limit,
+    skip: (page - 1) * limit,
+  })
+
+  const dataCount = await prisma.order.count({
+    where: {
+      userId: session?.user?.id,
+    },
+  })
+
+  return {
+    data,
+    totalPages: Math.ceil(dataCount / limit),
+  }
 }
