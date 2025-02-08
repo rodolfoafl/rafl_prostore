@@ -2,6 +2,7 @@ import { Eye } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
+import Pagination from '@/components/shared/pagination'
 import {
   Table,
   TableBody,
@@ -27,7 +28,7 @@ export default async function UserOrdersPage({
   const { page } = await searchParams
 
   const orders = await getUserOrders({
-    page: Number(page) | 1,
+    page: Number(page) || 1,
   })
 
   return (
@@ -74,6 +75,12 @@ export default async function UserOrdersPage({
             ))}
           </TableBody>
         </Table>
+        {orders.totalPages > 1 && (
+          <Pagination
+            page={Number(page) || 1}
+            totalPages={orders?.totalPages}
+          />
+        )}
       </div>
     </div>
   )

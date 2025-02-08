@@ -46,4 +46,4 @@ export const DEFAULT_PAYMENT_METHOD =
   process.env.DEFAULT_PAYMENT_METHOD || 'PayPal'
 
 export const PAGINATION_PAGE_SIZE =
-  Number(process.env.PAGINATION_PAGE_SIZE) || 3
+  Number(process.env.PAGINATION_PAGE_SIZE) || 10
