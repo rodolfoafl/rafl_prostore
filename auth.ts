@@ -72,6 +72,14 @@ export const config = {
         token.id = user.id
         token.role = user.role
 
+        if (trigger === 'signOut') {
+          token.id = null
+          token.role = null
+          token.name = null
+
+          return token
+        }
+
         if (user.name === 'NO_NAME') {
           token.name = user.email!.split('@')[0]
 

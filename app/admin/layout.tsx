@@ -1,26 +1,43 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
+import { auth } from '@/auth'
 import MainNav from '@/components/main-nav'
 import Menu from '@/components/shared/header/menu'
+import { Input } from '@/components/ui/input'
 import { APP_NAME } from '@/lib/constants'
 
 const NAV_OPTIONS = [
   {
-    title: 'Profile',
-    href: '/user/profile',
+    title: 'Overview',
+    href: '/admin/overview',
+  },
+  {
+    title: 'Products',
+    href: '/admin/products',
   },
   {
     title: 'Orders',
-    href: '/user/orders',
+    href: '/admin/orders',
+  },
+  {
+    title: 'Users',
+    href: '/admin/users',
   },
 ]
 
-export default function UserLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await auth()
+  if (session?.user.role !== 'admin') {
+    // throw new Error('User is not authorized')
+    redirect('/')
+  }
+
   return (
     <>
       <div className="flex flex-col">
@@ -37,6 +54,13 @@ export default function UserLayout({
 
             <MainNav className="mx-6" navOptions={NAV_OPTIONS} />
             <div className="ml-auto flex items-center space-x-4">
+              <div>
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  className="md:w-[100px] lg:w-[300px]"
+                />
+              </div>
               <Menu />
             </div>
           </div>

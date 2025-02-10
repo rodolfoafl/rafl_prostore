@@ -6,21 +6,15 @@ import React from 'react'
 
 import { cn } from '@/lib/utils'
 
-const LINKS = [
-  {
-    title: 'Profile',
-    href: '/user/profile',
-  },
-  {
-    title: 'Orders',
-    href: '/user/orders',
-  },
-]
+type MainNavProps = {
+  navOptions: { href: string; title: string }[]
+} & React.HTMLAttributes<HTMLElement>
 
 export default function MainNav({
+  navOptions,
   className,
   ...props
-}: React.HTMLAttributes<HTMLElement>) {
+}: MainNavProps) {
   const pathname = usePathname()
 
   return (
@@ -28,16 +22,16 @@ export default function MainNav({
       className={cn('flex items-center space-x-4 lg:space-x-6', className)}
       {...props}
     >
-      {LINKS.map((link) => (
+      {navOptions.map((opt) => (
         <Link
-          key={link.href}
-          href={link.href}
+          key={opt.href}
+          href={opt.href}
           className={cn(
             'text-sm font-medium transition-colors hover:text-primary',
-            pathname.includes(link.href) ? '' : 'text-muted-foreground',
+            pathname.includes(opt.href) ? '' : 'text-muted-foreground',
           )}
         >
-          {link.title}
+          {opt.title}
         </Link>
       ))}
     </nav>

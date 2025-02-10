@@ -132,3 +132,8 @@ export function formUrlQuery({
     },
   )
 }
+
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US')
+export function formatNumber(value: number) {
+  return NUMBER_FORMATTER.format(value)
+}

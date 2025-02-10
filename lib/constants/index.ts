@@ -35,7 +35,7 @@ export const PROTECTED_PATHS = [
   /\/profile/,
   /\/user\/(.*)/,
   /\/order\/(.*)/,
-  /\/admin/,
+  /\/admin\/(.*)/,
 ]
 
 export const PAYMENT_METHODS = process.env.PAYMENT_METHODS
