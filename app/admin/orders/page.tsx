@@ -1,22 +1,22 @@
 import { Metadata } from 'next'
 
 import OrdersTable from '@/components/orders-table'
-import { getUserOrders } from '@/lib/actions/order.action'
+import { getAllOrders } from '@/lib/actions/order.action'
 
 export const metadata: Metadata = {
-  title: 'My Orders',
+  title: 'Admin Orders',
 }
 
-interface UserOrdersPageProps {
+interface AdminOrdersPageProps {
   searchParams: Promise<{ page: string }>
 }
 
-export default async function UserOrdersPage({
+export default async function AdminOrdersPage({
   searchParams,
-}: UserOrdersPageProps) {
+}: AdminOrdersPageProps) {
   const { page = '1' } = await searchParams
 
-  const orders = await getUserOrders({
+  const orders = await getAllOrders({
     page: Number(page),
   })
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: 'Admin Dashboard',
 }
 
-export default async function OverviewPage() {
+export default async function AdminOverviewPage() {
   const summary = await getOrdersSummary()
 
   return (
