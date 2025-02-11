@@ -137,3 +137,7 @@ const NUMBER_FORMATTER = new Intl.NumberFormat('en-US')
 export function formatNumber(value: number) {
   return NUMBER_FORMATTER.format(value)
 }
+
+export function shortenProductName(name: string, length = 20) {
+  return name.length > length ? `${name.slice(0, length)}...` : name
+}
