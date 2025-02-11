@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache'
 import { prisma } from '@/db/prisma'
 import { LATEST_PRODUCTS_LIMIT, PAGINATION_PAGE_SIZE } from '@/lib/constants'
 import { convertToPlainObject, formatError } from '@/lib/utils'
+import { insertProductSchema, updateProductSchema } from '@/lib/validators'
+import { Product } from '@/types'
 
 export async function getLatestProducts() {
   const data = await prisma.product.findMany({
@@ -75,6 +77,57 @@ export async function deleteProduct(id: string) {
     return {
       success: true,
       message: 'Product deleted successfully',
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    }
+  }
+}
+
+export async function createProduct(data: Product) {
+  try {
+    const product = insertProductSchema.parse(data)
+    await prisma.product.create({ data: product })
+
+    revalidatePath('/admin/products')
+
+    return {
+      success: true,
+      message: 'Product created successfully',
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    }
+  }
+}
+
+export async function updateProduct(data: Product) {
+  try {
+    const product = updateProductSchema.parse(data)
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id: product.id,
+      },
+    })
+
+    if (!existingProduct) throw new Error('Product not found')
+
+    await prisma.product.update({
+      where: {
+        id: product.id,
+      },
+      data: product,
+    })
+
+    revalidatePath('/admin/products')
+
+    return {
+      success: true,
+      message: 'Product updated successfully',
     }
   } catch (error) {
     return {

@@ -47,3 +47,18 @@ export const DEFAULT_PAYMENT_METHOD =
 
 export const PAGINATION_PAGE_SIZE =
   Number(process.env.PAGINATION_PAGE_SIZE) || 10
+
+export const PRODUCT_DEFAULT_VALUES = {
+  name: '',
+  slug: '',
+  category: '',
+  images: [],
+  brand: '',
+  description: '',
+  price: '0',
+  stock: 0,
+  rating: '0',
+  numReviews: '0',
+  isFeatured: false,
+  banner: null,
+}

@@ -141,3 +141,7 @@ export function formatNumber(value: number) {
 export function shortenProductName(name: string, length = 20) {
   return name.length > length ? `${name.slice(0, length)}...` : name
 }
+
+export function capitalizeText(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
