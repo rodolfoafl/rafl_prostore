@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 import OrdersTable from '@/components/orders-table'
-import { getAllOrders } from '@/lib/actions/order.action'
+import { deleteOrder, getAllOrders } from '@/lib/actions/order.action'
 
 export const metadata: Metadata = {
   title: 'Admin Orders',
@@ -20,5 +20,11 @@ export default async function AdminOrdersPage({
     page: Number(page),
   })
 
-  return <OrdersTable orders={orders} currentPage={page} />
+  return (
+    <OrdersTable
+      orders={orders}
+      currentPage={page}
+      dialogAction={deleteOrder}
+    />
+  )
 }
