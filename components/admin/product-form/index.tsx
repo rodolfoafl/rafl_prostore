@@ -3,7 +3,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { ControllerRenderProps, useForm } from 'react-hook-form'
+import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import slugify from 'slugify'
 
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
+import { createProduct, updateProduct } from '@/lib/actions/product.actions'
 import { PRODUCT_DEFAULT_VALUES } from '@/lib/constants'
 import { capitalizeText } from '@/lib/utils'
 import { insertProductSchema, updateProductSchema } from '@/lib/validators'
@@ -51,9 +52,41 @@ export default function ProductForm({
     form.setValue('slug', slugify(name, { lower: true }))
   }
 
+  const onSubmit: SubmitHandler<Product> = async (values) => {
+    if (type === 'create') {
+      const response = await createProduct(values)
+
+      toast({
+        variant: response.success ? 'default' : 'destructive',
+        description: response.message,
+      })
+
+      if (response.success) {
+        router.push('/admin/products')
+      }
+    }
+
+    if (type === 'update') {
+      if (!productId) {
+        return router.push('/admin/products')
+      }
+
+      const response = await updateProduct({ ...values, id: productId })
+
+      toast({
+        variant: response.success ? 'default' : 'destructive',
+        description: response.message,
+      })
+
+      if (response.success) {
+        router.push('/admin/products')
+      }
+    }
+  }
+
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-5 md:flex-row">
           {/* NAME */}
           <FormField
