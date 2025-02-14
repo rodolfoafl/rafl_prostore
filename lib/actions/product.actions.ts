@@ -20,7 +20,7 @@ export async function getLatestProducts() {
 }
 
 export async function getProductBySlug(slug: string) {
-  const data = await prisma.product.findFirst({
+  const data = await prisma.product.findUnique({
     where: {
       slug,
     },
@@ -138,4 +138,14 @@ export async function updateProduct(data: Product) {
       message: formatError(error),
     }
   }
+}
+
+export async function getProductById(id: string) {
+  const data = await prisma.product.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  return convertToPlainObject(data)
 }
