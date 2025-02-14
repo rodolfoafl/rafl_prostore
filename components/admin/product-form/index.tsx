@@ -9,6 +9,7 @@ import slugify from 'slugify'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -88,6 +89,8 @@ export default function ProductForm({
   }
 
   const images = form.watch('images')
+  const isFeatured = form.watch('isFeatured')
+  const banner = form.watch('banner')
 
   return (
     <Form {...form}>
@@ -270,7 +273,53 @@ export default function ProductForm({
             )}
           />
         </div>
-        <div className="upload-field">{/* IS FEATURED */}</div>
+        <div className="upload-field space-y-2">
+          {/* IS FEATURED */}
+          <FormLabel>Featured Product</FormLabel>
+          <Card>
+            <CardContent className="mt-2 space-y-2">
+              <FormField
+                control={form.control}
+                name="isFeatured"
+                render={({ field }) => (
+                  <FormItem className="items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel>Is Featured?</FormLabel>
+                  </FormItem>
+                )}
+              />
+              {isFeatured && banner && (
+                <Image
+                  src={banner}
+                  alt="Product banner image"
+                  className="w-full rounded-sm object-cover object-center"
+                  width={1920}
+                  height={680}
+                />
+              )}
+
+              {isFeatured && !banner && (
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(response: { url: string }[]) => {
+                    form.setValue('banner', response[0].url)
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast({
+                      variant: 'destructive',
+                      description: `Error: ${error.message}`,
+                    })
+                  }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
         <div>
           {/* DESCRIPTION */}
           <FormField
