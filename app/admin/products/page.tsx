@@ -39,8 +39,6 @@ export default async function AdminProductsPage({
     // limit: 3,
   })
 
-  console.log('products', products)
-
   return (
     <div className="space-y-2">
       <div className="flex-between">
@@ -83,7 +81,7 @@ export default async function AdminProductsPage({
           ))}
         </TableBody>
       </Table>
-      {products?.totalPages && products.totalPages > 1 && (
+      {products.totalPages > 1 && (
         <Pagination page={currentPage} totalPages={products.totalPages} />
       )}
     </div>

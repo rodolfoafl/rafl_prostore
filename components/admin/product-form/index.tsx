@@ -2,11 +2,13 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import slugify from 'slugify'
 
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Form,
   FormControl,
@@ -20,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { createProduct, updateProduct } from '@/lib/actions/product.actions'
 import { PRODUCT_DEFAULT_VALUES } from '@/lib/constants'
+import { UploadButton } from '@/lib/uploadthing'
 import { capitalizeText } from '@/lib/utils'
 import { insertProductSchema, updateProductSchema } from '@/lib/validators'
 import { Product } from '@/types'
@@ -83,6 +86,8 @@ export default function ProductForm({
       }
     }
   }
+
+  const images = form.watch('images')
 
   return (
     <Form {...form}>
@@ -209,7 +214,7 @@ export default function ProductForm({
                     placeholder="Enter product stock"
                     {...field}
                     type="number"
-                    min={1}
+                    min={0}
                   />
                 </FormControl>
                 <FormMessage />
@@ -219,6 +224,51 @@ export default function ProductForm({
         </div>
         <div className="upload-field flex flex-col gap-5 md:flex-row">
           {/* IMAGES */}
+          <FormField
+            control={form.control}
+            name="images"
+            render={() => (
+              <FormItem className="w-full">
+                <FormLabel>Images</FormLabel>
+                <Card>
+                  <CardContent className="mt-2 min-h-48 space-y-2">
+                    <div className="flex-start space-x-2">
+                      {images.map((image: string) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt="Product image"
+                          className="size-20 rounded-sm object-cover object-center"
+                          width={100}
+                          height={100}
+                        />
+                      ))}
+                      <FormControl>
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(
+                            response: { url: string }[],
+                          ) => {
+                            form.setValue('images', [
+                              ...images,
+                              response[0].url,
+                            ])
+                          }}
+                          onUploadError={(error: Error) => {
+                            toast({
+                              variant: 'destructive',
+                              description: `Error: ${error.message}`,
+                            })
+                          }}
+                        />
+                      </FormControl>
+                    </div>
+                  </CardContent>
+                </Card>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="upload-field">{/* IS FEATURED */}</div>
         <div>
