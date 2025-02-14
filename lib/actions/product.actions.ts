@@ -166,3 +166,26 @@ export async function getProductById(id: string) {
 
   return convertToPlainObject(data)
 }
+
+export async function getAllCategories() {
+  const data = await prisma.product.groupBy({
+    by: ['category'],
+    _count: true,
+  })
+
+  return data
+}
+
+export async function getFeaturedProducts() {
+  const data = await prisma.product.findMany({
+    where: {
+      isFeatured: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 4,
+  })
+
+  return convertToPlainObject(data)
+}
