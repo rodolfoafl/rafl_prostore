@@ -23,24 +23,35 @@ export const metadata: Metadata = {
 }
 
 interface AdminUserSPageProps {
-  searchParams: Promise<{ page: string }>
+  searchParams: Promise<{ page: string; query: string }>
 }
 
 export default async function AdminUserSPage({
   searchParams,
 }: AdminUserSPageProps) {
-  const { page } = await searchParams
+  const { page, query } = await searchParams
   const currentPage = Number(page) || 1
 
   const users = await getAllUsers({
     page: currentPage,
+    query,
   })
-
-  console.log('users:', users)
 
   return (
     <div className="space-y-2">
-      <h2 className="h2-bold">Users</h2>
+      <div className="flex items-center gap-3">
+        <h1 className="h2-bold">Users</h1>
+        {query && (
+          <div className="space-x-2">
+            Filtered by <i>&quot;{query}&quot;</i>{' '}
+            <Link href="/admin/users">
+              <Button variant="outline" size="sm">
+                Clear
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>

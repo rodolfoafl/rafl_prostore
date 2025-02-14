@@ -8,16 +8,17 @@ export const metadata: Metadata = {
 }
 
 interface AdminOrdersPageProps {
-  searchParams: Promise<{ page: string }>
+  searchParams: Promise<{ page: string; query: string }>
 }
 
 export default async function AdminOrdersPage({
   searchParams,
 }: AdminOrdersPageProps) {
-  const { page = '1' } = await searchParams
+  const { page = '1', query } = await searchParams
 
   const orders = await getAllOrders({
     page: Number(page),
+    query,
   })
 
   return (
@@ -25,6 +26,8 @@ export default async function AdminOrdersPage({
       orders={orders}
       currentPage={page}
       dialogAction={deleteOrder}
+      isAdmin={true}
+      query={query}
     />
   )
 }

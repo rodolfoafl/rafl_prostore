@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
+import Search from '@/components/admin/search'
 import MainNav from '@/components/main-nav'
 import Menu from '@/components/shared/header/menu'
-import { Input } from '@/components/ui/input'
 import { APP_NAME } from '@/lib/constants'
 
 const NAV_OPTIONS = [
@@ -54,13 +54,7 @@ export default async function AdminLayout({
 
             <MainNav className="mx-6" navOptions={NAV_OPTIONS} />
             <div className="ml-auto flex items-center space-x-4">
-              <div>
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="md:w-[100px] lg:w-[300px]"
-                />
-              </div>
+              <Search />
               <Menu />
             </div>
           </div>
