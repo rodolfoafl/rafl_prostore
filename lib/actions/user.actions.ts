@@ -14,7 +14,7 @@ import {
   signInFormSchema,
   signUpFormSchema,
 } from '@/lib/validators'
-import { PaymentMethod, ShippingAddress } from '@/types'
+import { PaymentMethod, ShippingAddress, UpdateUserFormSchema } from '@/types'
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -211,12 +211,12 @@ export async function getAllUsers({
 
 export async function deleteUser(id: string) {
   try {
-    const user = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: {
         id,
       },
     })
-    if (!user) throw new Error('User not found')
+    if (!existingUser) throw new Error('User not found')
 
     await prisma.user.delete({
       where: {
@@ -229,6 +229,40 @@ export async function deleteUser(id: string) {
     return {
       success: true,
       message: 'User deleted successfully',
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    }
+  }
+}
+
+export async function updateUser(user: UpdateUserFormSchema) {
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    })
+
+    if (!existingUser) throw new Error('User not found')
+
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        name: user.name,
+        role: user.role,
+      },
+    })
+
+    revalidatePath('/admin/users')
+
+    return {
+      success: true,
+      message: 'User updated successfully',
     }
   } catch (error) {
     return {

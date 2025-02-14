@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import UpdateUserForm from '@/components/admin/update-user-form'
 import { getUserById } from '@/lib/actions/user.actions'
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default async function UpdateUserPage({ params }: UpdateUserPageProps) {
   return (
     <div className="mx-auto max-w-lg space-y-8">
       <h1 className="h2-bold">Update User</h1>
+      <UpdateUserForm user={user} />
     </div>
   )
 }
