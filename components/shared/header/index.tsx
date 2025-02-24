@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import CategoryDrawer from '@/components/shared/header/category-drawer'
 import Menu from '@/components/shared/header/menu'
+import ProductSearch from '@/components/shared/header/search'
 import { APP_NAME } from '@/lib/constants'
 
 export default function Header() {
@@ -23,6 +24,9 @@ export default function Header() {
               {APP_NAME}
             </span>
           </Link>
+        </div>
+        <div className="hidden md:block">
+          <ProductSearch />
         </div>
         <Menu />
       </div>

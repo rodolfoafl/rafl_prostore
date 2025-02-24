@@ -18,8 +18,6 @@ export default async function UpdateUserPage({ params }: UpdateUserPageProps) {
 
   if (!user) return notFound()
 
-  console.log('user:', user)
-
   return (
     <div className="mx-auto max-w-lg space-y-8">
       <h1 className="h2-bold">Update User</h1>

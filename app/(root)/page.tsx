@@ -1,5 +1,8 @@
+import Link from 'next/link'
+
 import ProductCarousel from '@/components/shared/product/carousel'
 import ProductList from '@/components/shared/product/list'
+import { Button } from '@/components/ui/button'
 import {
   getFeaturedProducts,
   getLatestProducts,
@@ -14,7 +17,22 @@ export default async function HomePage() {
       {featuredProducts.length > 0 && (
         <ProductCarousel data={featuredProducts} />
       )}
-      <ProductList data={latestProducts} title="Newest Arrivals" limit={4} />
+
+      {latestProducts.length > 0 && (
+        <>
+          <ProductList
+            data={latestProducts}
+            title="Newest Arrivals"
+            limit={4}
+          />
+
+          <div className="my-8 flex items-center justify-center">
+            <Button asChild>
+              <Link href="/search">View All Products</Link>
+            </Button>
+          </div>
+        </>
+      )}
     </>
   )
 }
