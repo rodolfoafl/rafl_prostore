@@ -25,6 +25,7 @@ export type CartItem = z.infer<typeof cartItemSchema>
 export type ShippingAddress = z.infer<typeof shippingAddressSchema>
 export type PaymentMethod = z.infer<typeof paymentMethodSchema>
 export type OrderItem = CartItem
+export type PaymentResult = z.infer<typeof paymentResultSchema>
 export type Order = z.infer<typeof insertOrderSchema> & {
   id: string
   createdAt: Date
@@ -34,8 +35,8 @@ export type Order = z.infer<typeof insertOrderSchema> & {
   deliveredAt: Date | null
   orderitems: OrderItem[]
   user: { name: string; email: string }
+  paymentResult?: PaymentResult
 }
-export type PaymentResult = z.infer<typeof paymentResultSchema>
 export type UpdateUserProfile = z.infer<typeof updateUserProfileSchema>
 export type UpdateUserFormSchema = z.infer<typeof updateUserSchema>
 export type ReviewSchema = z.infer<typeof insertReviewSchema> & {

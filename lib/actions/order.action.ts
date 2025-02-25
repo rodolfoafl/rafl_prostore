@@ -6,13 +6,14 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error'
 
 import { auth } from '@/auth'
 import { prisma } from '@/db/prisma'
+import { sendPurchaseReceipt } from '@/email'
 import { getUserCart } from '@/lib/actions/cart.actions'
 import { getUserById } from '@/lib/actions/user.actions'
 import { PAGINATION_PAGE_SIZE } from '@/lib/constants'
 import { paypal } from '@/lib/paypal'
 import { convertToPlainObject, formatError } from '@/lib/utils'
 import { insertOrderSchema } from '@/lib/validators'
-import { CartItem, PaymentResult } from '@/types'
+import { CartItem, PaymentResult, ShippingAddress } from '@/types'
 
 export async function createOrder() {
   try {
@@ -272,6 +273,14 @@ export async function updateOrderToPaid({
   })
 
   if (!updatedOrder) throw new Error('Order not found')
+
+  sendPurchaseReceipt({
+    order: {
+      ...updatedOrder,
+      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+      paymentResult: updatedOrder.paymentResult as PaymentResult,
+    },
+  })
 }
 
 export async function getUserOrders({
