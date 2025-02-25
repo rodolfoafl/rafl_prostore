@@ -78,3 +78,9 @@ export const PRICE_RANGES = [
 export const RATINGS = [4, 3, 2, 1]
 
 export const SORT_ORDERS = ['newest', 'lowest', 'highest', 'rating']
+
+export const REVIEW_FORM_DEFAULT_VALUES = {
+  title: '',
+  description: '',
+  rating: 0,
+}
