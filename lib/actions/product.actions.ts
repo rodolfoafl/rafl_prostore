@@ -47,8 +47,6 @@ export async function getAllProducts({
   rating?: string
   sort?: string
 }) {
-  console.log(sort)
-
   const queryFilter: Prisma.ProductWhereInput =
     query && query !== 'all'
       ? {
@@ -80,6 +78,15 @@ export async function getAllProducts({
         }
       : {}
 
+  const sortFilter =
+    sort === 'lowest'
+      ? { price: Prisma.SortOrder.asc }
+      : sort === 'highest'
+        ? { price: Prisma.SortOrder.desc }
+        : sort === 'rating'
+          ? { rating: Prisma.SortOrder.desc }
+          : { createdAt: Prisma.SortOrder.desc }
+
   const data = await prisma.product.findMany({
     where: {
       ...queryFilter,
@@ -87,10 +94,7 @@ export async function getAllProducts({
       ...priceFilter,
       ...ratingFilter,
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
-
+    orderBy: sortFilter,
     skip: (page - 1) * limit,
     take: limit,
   })
