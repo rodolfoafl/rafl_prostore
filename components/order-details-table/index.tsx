@@ -10,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTransition } from 'react'
 
+import StripePaymentForm from '@/components/stripe-payment-form'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -35,10 +36,12 @@ export default function OrderDetailsTable({
   order,
   paypalClientId,
   isAdmin,
+  stripeClientSecret,
 }: {
   order: Order
   paypalClientId: string
   isAdmin: boolean
+  stripeClientSecret?: string | null
 }) {
   const { toast } = useToast()
 
@@ -254,6 +257,15 @@ export default function OrderDetailsTable({
                     />
                   </PayPalScriptProvider>
                 </div>
+              )}
+
+              {/* Stripe Payment */}
+              {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                <StripePaymentForm
+                  priceInCents={Number(order.totalPrice) * 100}
+                  orderId={order.id}
+                  clientSecret={stripeClientSecret}
+                />
               )}
 
               {/* Cash On Delivery */}
