@@ -1,9 +1,12 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { auth } from '@/auth'
+import ReviewList from '@/components/review-list'
 import AddToCart from '@/components/shared/product/add-to-cart'
 import ProductImages from '@/components/shared/product/images'
 import ProductPrice from '@/components/shared/product/price'
+import { Rating } from '@/components/shared/product/rating/rating'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { getUserCart } from '@/lib/actions/cart.actions'
@@ -23,6 +26,9 @@ export default async function ProductDetailsPage({
     notFound()
   }
 
+  const session = await auth()
+  const userId = session?.user?.id
+
   const cart = await getUserCart()
 
   return (
@@ -40,9 +46,8 @@ export default async function ProductDetailsPage({
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
-              <p>
-                {product.rating} of {product.numReviews} Reviews
-              </p>
+              <Rating value={Number(product.rating)} />
+              <p>{`${product.numReviews} review${product.numReviews > 1 ? 's' : ''}`}</p>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <ProductPrice
                   value={Number(product.price)}
@@ -92,6 +97,14 @@ export default async function ProductDetailsPage({
             </Card>
           </div>
         </div>
+      </section>
+      <section className="mt-10">
+        <h2 className="h2-bold">Customer Reviews</h2>
+        <ReviewList
+          userId={userId || ''}
+          productId={product.id}
+          productSlug={product.slug}
+        />
       </section>
     </>
   )
